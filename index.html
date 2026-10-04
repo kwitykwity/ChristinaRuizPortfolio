@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Christina Ruiz</title>
+<meta name="description" content="Combined portfolio of Christina Ruiz's Pursuit L2 fellowship projects and earlier L1 builds, with clickable live-app previews.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-primary: #0A0E27;
+    --bg-secondary: #111633;
+    --bg-card: rgba(255, 255, 255, 0.05);
+    --bg-card-hover: rgba(255, 255, 255, 0.08);
+    --text-primary: #FFFFFF;
+    --text-secondary: rgba(255, 255, 255, 0.7);
+    --text-muted: rgba(255, 255, 255, 0.5);
+    --accent: #FF6B35;
+    --accent-hover: #FF8555;
+    --border: rgba(255, 255, 255, 0.1);
+    --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    color-scheme: dark;
+  }
+  [data-theme="light"] {
+    --bg-primary: #F8F9FA;
+    --bg-secondary: #FFFFFF;
+    --bg-card: rgba(0, 0, 0, 0.03);
+    --bg-card-hover: rgba(0, 0, 0, 0.06);
+    --text-primary: #1A1A2E;
+    --text-secondary: rgba(26, 26, 46, 0.7);
+    --text-muted: rgba(26, 26, 46, 0.5);
+    --accent: #FF6B35;
+    --accent-hover: #E55A25;
+    --border: rgba(0, 0, 0, 0.1);
+    --shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    color-scheme: light;
+  }
+
+  * , *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    min-height: 100%;
+    transition: background-color .3s ease, color .3s ease;
+  }
+
+  .skip-link {
+    position: absolute; top: -100%; left: 50%; transform: translateX(-50%);
+    background: var(--accent); color: #fff; padding: .75rem 1.5rem;
+    border-radius: 0 0 8px 8px; z-index: 1000; transition: top .3s ease;
+  }
+  .skip-link:focus { top: 0; }
+
+  .background-overlay {
+    position: fixed; inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 20%, rgba(255,107,53,.1) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 80%, rgba(255,107,53,.05) 0%, transparent 50%);
+    pointer-events: none; z-index: -1;
+  }
+
+  .theme-toggle {
+    position: fixed; top: calc(1.5rem + env(safe-area-inset-top, 0px)); right: 1.5rem;
+    display: flex; align-items: center; gap: .5rem; padding: .75rem 1rem;
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 50px;
+    color: var(--text-primary); cursor: pointer; backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px); transition: all .3s ease; z-index: 100;
+  }
+  .theme-toggle:hover { background: var(--bg-card-hover); transform: translateY(-2px); }
+  .theme-toggle .icon { width: 20px; height: 20px; }
+  .theme-toggle .sun-icon { display: none; }
+  [data-theme="light"] .theme-toggle .sun-icon { display: block; }
+  [data-theme="light"] .theme-toggle .moon-icon { display: none; }
+  .toggle-text { font-size: .875rem; font-weight: 500; }
+
+  .container { max-width: 1200px; margin: 0 auto; padding: 2rem; padding-block: 2rem; }
+
+  .header { padding: 4rem 0 3rem; }
+  .profile-section { display: flex; align-items: center; gap: 2rem; margin-bottom: 2rem; flex-wrap: wrap; }
+  .profile-image { width: 160px; height: 160px; border-radius: 12px; border: 3px solid var(--accent); object-fit: cover; flex-shrink: 0; }
+  .profile-info { flex: 1; min-width: 240px; }
+  .name { font-family: 'DM Serif Display', Georgia, serif; font-size: clamp(2.25rem, 5vw, 3.5rem); font-weight: 400; margin-bottom: .5rem; line-height: 1.15; text-wrap: balance; }
+  .tagline { font-size: 1.1rem; color: var(--text-secondary); margin-bottom: 1rem; }
+  .accent-line { width: 80px; height: 3px; background: var(--accent); border-radius: 2px; }
+
+  .nav-buttons { display: flex; flex-wrap: wrap; gap: 1rem; }
+  .nav-btn {
+    display: inline-flex; align-items: center; gap: .5rem; padding: .875rem 1.5rem;
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px;
+    color: var(--text-primary); text-decoration: none; font-weight: 500;
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); transition: all .3s ease;
+  }
+  .nav-btn:hover { background: var(--accent); border-color: var(--accent); transform: translateY(-3px); box-shadow: 0 10px 30px rgba(255,107,53,.3); }
+  .btn-icon { width: 18px; height: 18px; }
+
+  .intro-section { margin-bottom: 3rem; }
+  .intro-text { font-size: 1.1rem; color: var(--text-secondary); max-width: 700px; }
+  .highlight { color: var(--accent); font-weight: 600; }
+
+  .section-tabs { display: flex; gap: .5rem; margin-bottom: 2rem; flex-wrap: wrap; }
+  .tab-btn {
+    padding: .625rem 1.25rem; border-radius: 50px; border: 1px solid var(--border);
+    background: var(--bg-card); color: var(--text-secondary); font-family: 'Manrope', sans-serif;
+    font-weight: 600; font-size: .9rem; cursor: pointer; transition: all .25s ease;
+  }
+  .tab-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .tab-btn:hover:not(.active) { background: var(--bg-card-hover); color: var(--text-primary); }
+
+  .projects-section { margin-bottom: 3rem; }
+  .projects-section[hidden] { display: none; }
+  .section-title { font-family: 'DM Serif Display', Georgia, serif; font-size: clamp(1.6rem, 3vw, 2.1rem); margin-bottom: .4rem; }
+  .section-subtitle { color: var(--text-muted); font-size: .95rem; margin-bottom: 2rem; }
+
+  .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+
+  .project-card {
+    display: flex; flex-direction: column;
+    position: relative; background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 16px; overflow: hidden; backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px); transition: all .3s ease; text-decoration: none; color: inherit;
+  }
+  .project-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: var(--accent); transform: scaleX(0); transition: transform .3s ease;
+  }
+  .project-card:hover { background: var(--bg-card-hover); transform: translateY(-5px); box-shadow: var(--shadow); }
+  .project-card:hover::before { transform: scaleX(1); }
+  .project-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .project-image-wrapper { position: relative; width: 100%; aspect-ratio: 16/9; overflow: hidden; background: var(--bg-secondary); }
+  .project-image { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; transition: transform .4s ease; }
+  .project-card:hover .project-image { transform: scale(1.04); }
+
+  .view-badge {
+    position: absolute; bottom: .75rem; right: .75rem; padding: .4rem .8rem;
+    background: rgba(10,14,39,.85); border: 1px solid rgba(255,255,255,.2); border-radius: 50px;
+    color: #fff; font-size: .75rem; font-weight: 600; display: flex; align-items: center; gap: .35rem;
+    opacity: 0; transform: translateY(4px); transition: all .25s ease; backdrop-filter: blur(6px);
+  }
+  .project-card:hover .view-badge { opacity: 1; transform: translateY(0); }
+  .view-badge svg { width: 12px; height: 12px; }
+
+  .project-number { position: absolute; top: .75rem; left: .75rem; font-family: 'DM Serif Display', Georgia, serif; font-size: 1.4rem; color: #fff; opacity: .85; text-shadow: 0 2px 8px rgba(0,0,0,.5); z-index: 2; }
+
+  .project-body { padding: 1.5rem; flex: 1; display: flex; flex-direction: column; }
+  .project-title { font-family: 'DM Serif Display', Georgia, serif; font-size: 1.3rem; margin-bottom: .6rem; }
+  .project-description { font-size: .92rem; color: var(--text-secondary); margin-bottom: 1rem; line-height: 1.65; flex: 1; }
+
+  .project-tags { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1rem; }
+  .tag { padding: .2rem .7rem; background: rgba(255,107,53,.15); color: var(--accent); border-radius: 50px; font-size: .75rem; font-weight: 600; }
+
+  .project-meta { display: flex; justify-content: space-between; align-items: center; gap: .5rem; }
+  .collaborators { font-size: .8rem; color: var(--text-muted); font-style: italic; }
+  .project-link-label { font-size: .8rem; color: var(--accent); font-weight: 600; white-space: nowrap; display: flex; align-items: center; gap: .3rem; }
+  .project-link-label svg { width: 12px; height: 12px; }
+
+  /* placeholder browser-mockup preview for projects without a captured screenshot */
+  .mock-preview { width: 100%; height: 100%; display: flex; flex-direction: column; }
+  .mock-chrome { display: flex; align-items: center; gap: .35rem; padding: .5rem .7rem; background: rgba(255,255,255,.06); border-bottom: 1px solid var(--border); }
+  .mock-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,.25); }
+  .mock-url { margin-left: .5rem; font-size: .65rem; color: var(--text-muted); background: rgba(255,255,255,.05); padding: .15rem .6rem; border-radius: 20px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
+  .mock-body { flex: 1; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, rgba(255,107,53,.18), rgba(10,14,39,.4)); }
+  .mock-initial { font-family: 'DM Serif Display', Georgia, serif; font-size: 3rem; color: var(--accent); opacity: .75; }
+
+  .footer { text-align: center; padding: 2rem 0; border-top: 1px solid var(--border); color: var(--text-muted); font-size: .9rem; }
+
+  @media (max-width: 768px) {
+    .container { padding: 1rem; }
+    .profile-section { flex-direction: column; text-align: center; }
+    .accent-line { margin: 0 auto; }
+    .nav-buttons { justify-content: center; }
+    .theme-toggle { top: calc(1rem + env(safe-area-inset-top, 0px)); right: 1rem; padding: .6rem; }
+    .toggle-text { display: none; }
+    .intro-text { text-align: center; margin: 0 auto; }
+    .section-tabs { justify-content: center; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition-duration: .01ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<a href="#main-content" class="skip-link">Skip to main content</a>
+<div class="background-overlay"></div>
+
+<button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+  <svg class="icon sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
+  <svg class="icon moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+  <span class="toggle-text">Theme</span>
+</button>
+
+<div class="container">
+  <header class="header">
+    <div class="profile-section">
+      <img src="images/profile.jpg" alt="Christina Ruiz" class="profile-image">
+      <div class="profile-info">
+        <h1 class="name">Christina Ruiz</h1>
+        <p class="tagline">IT Support Professional &amp; AI Builder &middot; Pursuit AI Native Fellowship, 2026</p>
+        <div class="accent-line"></div>
+      </div>
+    </div>
+    <nav class="nav-buttons" aria-label="Profile links">
+      <a href="https://kwitykwity.github.io/pursuit-l2-portfolio/resume.pdf" class="nav-btn" target="_blank" rel="noopener">
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+        Resume
+      </a>
+      <a href="https://www.linkedin.com/in/ruizchristina/" class="nav-btn" target="_blank" rel="noopener">
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+        LinkedIn
+      </a>
+      <a href="https://github.com/kwitykwity" class="nav-btn" target="_blank" rel="noopener">
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+        GitHub
+      </a>
+      <a href="https://www.tiktok.com/@kwitykwity" class="nav-btn" target="_blank" rel="noopener">
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M16.6 5.82c-.7-.77-1.13-1.76-1.2-2.82h-3.13v13.4c0 1.67-1.36 3.02-3.03 3.02a3.03 3.03 0 0 1-3.03-3.02 3.03 3.03 0 0 1 3.03-3.03c.31 0 .61.05.9.13V10.3a6.2 6.2 0 0 0-.9-.07A6.2 6.2 0 0 0 3.1 16.4a6.2 6.2 0 0 0 6.2 6.2 6.2 6.2 0 0 0 6.2-6.2V9.14a8.2 8.2 0 0 0 4.7 1.48V7.5a4.85 4.85 0 0 1-3.6-1.68z"/></svg>
+        TikTok
+      </a>
+    </nav>
+  </header>
+
+  <main id="main-content">
+    <section class="intro-section">
+      <p class="intro-text">
+        Ten years supporting IT at NYC schools and Fordham Law, now building with
+        <span class="highlight">Claude API, React, Vite, Supabase and Vercel</span>.
+        Below: four projects from the Pursuit AI Native Fellowship (L2) and the earlier builds that got me there (L1).
+        Click any preview to open the working app.
+      </p>
+    </section>
+
+    <div class="section-tabs" role="tablist" aria-label="Project groups">
+      <button class="tab-btn active" data-target="l2" role="tab" aria-selected="true">All Projects</button>
+      <button class="tab-btn" data-target="l2-only" role="tab" aria-selected="false">Pursuit L2</button>
+      <button class="tab-btn" data-target="l1-only" role="tab" aria-selected="false">Earlier Builds (L1)</button>
+    </div>
+
+    <section class="projects-section" id="l2" data-group="l2">
+      <h2 class="section-title">Pursuit L2 &mdash; AI Native Fellowship</h2>
+      <p class="section-subtitle">June&ndash;July 2026 &middot; React + Vite + Tailwind + Supabase + Vercel, with Claude API calls routed through Vercel serverless functions</p>
+      <div class="projects-grid">
+
+        <a class="project-card" href="https://redditclone-v3.vercel.app/" target="_blank" rel="noopener">
+          <div class="project-image-wrapper">
+            <span class="project-number">01</span>
+            <img class="project-image" src="images/redditclone.png" alt="RedditClone app screenshot">
+            <span class="view-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>Open live app</span>
+          </div>
+          <div class="project-body">
+            <h3 class="project-title">RedditClone</h3>
+            <p class="project-description">React app replicating r/AITAH with six live ad unit types, each with expandable explanations that demystify the ad-supported internet in a single scroll.</p>
+            <div class="project-tags"><span class="tag">React 19</span><span class="tag">Vite</span><span class="tag">CSS Modules</span></div>
+            <div class="project-meta"><span class="collaborators">w/ Bernard Shepard</span></div>
+          </div>
+        </a>
+
+        <a class="project-card" href="https://staysignal-v3.vercel.app/" target="_blank" rel="noopener">
+          <div class="project-image-wrapper">
+            <span class="project-number">02</span>
+            <img class="project-image" src="images/staysignal.png" alt="StaySignal app screenshot">
+            <span class="view-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>Open live app</span>
+          </div>
+          <div class="project-body">
+            <h3 class="project-title">StaySignal</h3>
+            <p class="project-description">Hospitality cancellation-risk predictor using XGBoost, with a Qatar Market Context tab showing dual-axis trend charts and COVID/World Cup reference bands.</p>
+            <div class="project-tags"><span class="tag">XGBoost</span><span class="tag">FastAPI</span><span class="tag">Recharts</span></div>
+            <div class="project-meta"><span class="collaborators">w/ Schiffon Wise, Chris Wozniak</span></div>
+          </div>
+        </a>
+
+        <a class="project-card" href="https://kwitykwity.github.io/pursuit-l2-portfolio/verbatim/README.md" target="_blank" rel="noopener">
+          <div class="project-image-wrapper">
+            <span class="project-number">03</span>
+            <img class="project-image" src="images/verbatim.png" alt="Verbatim app screenshot">
+            <span class="view-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>View details</span>
+          </div>
+          <div class="project-body">
+            <h3 class="project-title">Verbatim</h3>
+            <p class="project-description">Multi-agent AI copywriting audit built as a Google Docs Add-on. Core insight: tool schema restriction constrains agent behavior more reliably than prompt instructions.</p>
+            <div class="project-tags"><span class="tag">Claude API</span><span class="tag">Google Apps Script</span><span class="tag">Multi-Agent</span></div>
+            <div class="project-meta"><span class="collaborators">w/ Karl Johnson</span></div>
+          </div>
+        </a>
+
+        <a class="project-card" href="https://narrate-me-sage.vercel.app/" target="_blank" rel="noopener">
+          <div class="project-image-wrapper">
+            <span class="project-number">04</span>
+            <img class="project-image" src="images/narrateme.png" alt="NarrateMe app screenshot">
+            <span class="view-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>Open live app</span>
+          </div>
+          <div class="project-body">
+            <h3 class="project-title">NarrateMe</h3>
+            <p class="project-description">AI storyteller for kids 6&ndash;9 that turns written stories into narrated, illustrated multi-scene presentations with TTS and generated artwork.</p>
+            <div class="project-tags"><span class="tag">Next.js</span><span class="tag">gpt-image-2</span><span class="tag">ElevenLabs</span></div>
+            <div class="project-meta"><span class="collaborators">w/ Erasmo Concepcion, Bernard Shepard, Richard Theard</span></div>
+          </div>
+        </a>
+
+      </div>
+    </section>
+
+    <section class="projects-section" id="l1" data-group="l1">
+      <h2 class="section-title">Earlier Builds &mdash; L1</h2>
+      <p class="section-subtitle">The progression that led to Pursuit: first AI apps, experiments, and one first published repo</p>
+      <div class="projects-grid">
+
+        <a class="project-card" href="https://onset-40.vercel.app" target="_blank" rel="noopener">
+          <div class="project-image-wrapper">
+            <span class="project-number">01</span>
+            <div class="mock-preview"><div class="mock-chrome"><span class="mock-dot"></span><span class="mock-dot"></span><span class="mock-dot"></span><span class="mock-url">onset-40.vercel.app</span></div><div class="mock-body"><span class="mock-initial">O</span></div></div>
+            <span class="view-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>Open live app</span>
+          </div>
+          <div class="project-body">
+            <h3 class="project-title">Onset</h3>
+            <p class="project-description">An AI-powered brain dump and task manager for adults with ADHD and focus challenges &mdash; turns scattered thoughts into actionable tasks in real time.</p>
+            <div class="project-tags"><span class="tag">React</span><span class="tag">Supabase</span><span class="tag">Claude API</span></div>
+          </div>
+        </a>
+
+        <a class="project-card" href="https://carsync-ruddy.vercel.app" target="_blank" rel="noopener">
+          <div class="project-image-wrapper">
+            <span class="project-number">02</span>
+            <div class="mock-preview"><div class="mock-chrome"><span class="mock-dot"></span><span class="mock-dot"></span><span class="mock-dot"></span><span class="mock-url">carsync-ruddy.vercel.app</span></div><div class="mock-body"><span class="mock-initial">C</span></div></div>
+            <span class="view-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>Open live app</span>
+          </div>
+          <div class="project-body">
+            <h3 class="project-title">CarSync</h3>
+            <p class="project-description">A shared car coordination PWA for two-driver households: real-time parking location sharing, shift scheduling, and status updates with email OTP login.</p>
+            <div class="project-tags"><span class="tag">React</span><span class="tag">Supabase</span><span class="tag">PWA</span></div>
+          </div>
+        </a>
+
+        <a class="project-card" href="https://fridge-meal-planner.vercel.app/" target="_blank" rel="noopener">
+          <div class="project-image-wrapper">
+            <span class="project-number">03</span>
+            <div class="mock-preview"><div class="mock-chrome"><span class="mock-dot"></span><span class="mock-dot"></span><span class="mock-dot"></span><span class="mock-url">fridge-meal-planner.vercel.app</span></div><div class="mock-body"><span class="mock-initial">F</span></div></div>
+            <span class="view-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>Open live app</span>
+          </div>
+          <div class="project-body">
+            <h3 class="project-title">Fridge-to-Meal Planner</h3>
+            <p class="project-description">Enter what's already in your kitchen and get personalized, practical meal suggestions powered by the Claude API.</p>
+            <div class="project-tags"><span class="tag">React</span><span class="tag">Tailwind</span><span class="tag">Claude API</span></div>
+          </div>
+        </a>
+
+        <a class="project-card" href="https://perspective-checker.vercel.app/" target="_blank" rel="noopener">
+          <div class="project-image-wrapper">
+            <span class="project-number">04</span>
+            <div class="mock-preview"><div class="mock-chrome"><span class="mock-dot"></span><span class="mock-dot"></span><span class="mock-dot"></span><span class="mock-url">perspective-checker.vercel.app</span></div><div class="mock-body"><span class="mock-initial">P</span></div></div>
+            <span class="view-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>Open live app</span>
+          </div>
+          <div class="project-body">
+            <h3 class="project-title">Perspective Confidence Score</h3>
+            <p class="project-description">A "spell-checker for perspective" &mdash; artists upload drawings and get a scored, detailed technique analysis powered by Claude Vision.</p>
+            <div class="project-tags"><span class="tag">React</span><span class="tag">Claude Vision</span><span class="tag">Supabase</span></div>
+          </div>
+        </a>
+
+        <a class="project-card" href="https://kwitykwity.github.io/DAMTool" target="_blank" rel="noopener">
+          <div class="project-image-wrapper">
+            <span class="project-number">05</span>
+            <div class="mock-preview"><div class="mock-chrome"><span class="mock-dot"></span><span class="mock-dot"></span><span class="mock-dot"></span><span class="mock-url">kwitykwity.github.io/DAMTool</span></div><div class="mock-body"><span class="mock-initial">D</span></div></div>
+            <span class="view-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>View docs</span>
+          </div>
+          <div class="project-body">
+            <h3 class="project-title">Digital Asset Manager</h3>
+            <p class="project-description">Open-source DAM tool that auto-tags images with Google Cloud Vision and supports duplicate detection, running entirely in Google Sheets &mdash; no hosting required.</p>
+            <div class="project-tags"><span class="tag">Apps Script</span><span class="tag">Google Sheets</span><span class="tag">Cloud Vision</span></div>
+          </div>
+        </a>
+
+        <a class="project-card" href="https://kwitykwity.github.io/my-nexus-social/" target="_blank" rel="noopener">
+          <div class="project-image-wrapper">
+            <span class="project-number">06</span>
+            <div class="mock-preview"><div class="mock-chrome"><span class="mock-dot"></span><span class="mock-dot"></span><span class="mock-dot"></span><span class="mock-url">kwitykwity.github.io/my-nexus-social</span></div><div class="mock-body"><span class="mock-initial">N</span></div></div>
+            <span class="view-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>Open live app</span>
+          </div>
+          <div class="project-body">
+            <h3 class="project-title">Nexus Social</h3>
+            <p class="project-description">A reimagined saved-posts feature for social platforms &mdash; organize, search, and retrieve content saved across apps in one place.</p>
+            <div class="project-tags"><span class="tag">Social</span><span class="tag">Database</span><span class="tag">Claude Pro</span></div>
+          </div>
+        </a>
+
+        <a class="project-card" href="https://kwitykwity.github.io/AI_Math_Chatbot/" target="_blank" rel="noopener">
+          <div class="project-image-wrapper">
+            <span class="project-number">07</span>
+            <div class="mock-preview"><div class="mock-chrome"><span class="mock-dot"></span><span class="mock-dot"></span><span class="mock-dot"></span><span class="mock-url">kwitykwity.github.io/AI_Math_Chatbot</span></div><div class="mock-body"><span class="mock-initial">M</span></div></div>
+            <span class="view-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>Open live app</span>
+          </div>
+          <div class="project-body">
+            <h3 class="project-title">AI Math Chatbot</h3>
+            <p class="project-description">A chat-based math practice prototype for middle schoolers, with hint-only guidance, adaptive difficulty, and light gamification.</p>
+            <div class="project-tags"><span class="tag">AI/ML</span><span class="tag">Education</span><span class="tag">ChatGPT API</span></div>
+          </div>
+        </a>
+
+        <a class="project-card" href="https://kwitykwity.github.io/my-first-repo/focus-mini-app.html" target="_blank" rel="noopener">
+          <div class="project-image-wrapper">
+            <span class="project-number">08</span>
+            <div class="mock-preview"><div class="mock-chrome"><span class="mock-dot"></span><span class="mock-dot"></span><span class="mock-dot"></span><span class="mock-url">kwitykwity.github.io/my-first-repo</span></div><div class="mock-body"><span class="mock-initial">F</span></div></div>
+            <span class="view-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>Open live app</span>
+          </div>
+          <div class="project-body">
+            <h3 class="project-title">Focus Mini App</h3>
+            <p class="project-description">A productivity app that alternates focused work sessions with short breathing breaks to help sustain concentration through the day.</p>
+            <div class="project-tags"><span class="tag">JavaScript</span><span class="tag">Productivity</span></div>
+          </div>
+        </a>
+
+        <a class="project-card" href="https://kwitykwity.github.io/my-first-repo/calculator.html" target="_blank" rel="noopener">
+          <div class="project-image-wrapper">
+            <span class="project-number">09</span>
+            <div class="mock-preview"><div class="mock-chrome"><span class="mock-dot"></span><span class="mock-dot"></span><span class="mock-dot"></span><span class="mock-url">kwitykwity.github.io/my-first-repo</span></div><div class="mock-body"><span class="mock-initial">C</span></div></div>
+            <span class="view-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>Open live app</span>
+          </div>
+          <div class="project-body">
+            <h3 class="project-title">Simple Calculator</h3>
+            <p class="project-description">A dark-themed web calculator with keyboard support and a clean interface &mdash; my first project published to GitHub Pages.</p>
+            <div class="project-tags"><span class="tag">JavaScript</span><span class="tag">HTML/CSS</span></div>
+          </div>
+        </a>
+
+        <a class="project-card" href="https://kwitykwity.github.io/my-first-repo/converter/index.html" target="_blank" rel="noopener">
+          <div class="project-image-wrapper">
+            <span class="project-number">10</span>
+            <div class="mock-preview"><div class="mock-chrome"><span class="mock-dot"></span><span class="mock-dot"></span><span class="mock-dot"></span><span class="mock-url">kwitykwity.github.io/my-first-repo</span></div><div class="mock-body"><span class="mock-initial">K</span></div></div>
+            <span class="view-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>Open live app</span>
+          </div>
+          <div class="project-body">
+            <h3 class="project-title">Kilometer-to-Mile Converter</h3>
+            <p class="project-description">A dark-themed unit converter for kilometers to miles, with results rounded to one decimal place for clean output.</p>
+            <div class="project-tags"><span class="tag">JavaScript</span><span class="tag">HTML/CSS</span></div>
+          </div>
+        </a>
+
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p>&copy; 2026 Christina Ruiz. Built during the Pursuit AI Native Fellowship &mdash; and everything before it.</p>
+    </footer>
+  </main>
+</div>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  try {
+    var saved = localStorage.getItem('theme');
+    if (saved) root.setAttribute('data-theme', saved);
+  } catch (e) {}
+  toggle.addEventListener('click', function () {
+    var current = root.getAttribute('data-theme') ||
+      (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+    var next = current === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try { localStorage.setItem('theme', next); } catch (e) {}
+  });
+
+  var tabs = document.querySelectorAll('.tab-btn');
+  var l2 = document.getElementById('l2');
+  var l1 = document.getElementById('l1');
+  tabs.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      tabs.forEach(function (b) { b.classList.remove('active'); b.setAttribute('aria-selected', 'false'); });
+      btn.classList.add('active');
+      btn.setAttribute('aria-selected', 'true');
+      var t = btn.getAttribute('data-target');
+      if (t === 'l2') { l2.hidden = false; l1.hidden = false; }
+      if (t === 'l2-only') { l2.hidden = false; l1.hidden = true; }
+      if (t === 'l1-only') { l2.hidden = true; l1.hidden = false; }
+    });
+  });
+})();
+</script>
+</body>
+</html>
